@@ -1,31 +1,14 @@
-"use client";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import SignOutButton from "@/components/SignOutButton";
+import { Session } from "next-auth";
 
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "loading") return;
-    if (!session) router.push("/auth/signin");
-  }, [session, status, router]);
-
-  if (status === "loading") {
-    return (
-      <div className="page-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
-  }
+export default async function Dashboard() {
+  const session = (await getServerSession(authOptions)) as Session | null;
 
   if (!session) {
-    return null;
+    redirect("/auth/signin");
   }
 
   return (
@@ -50,18 +33,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="space-y-4">
-            <button onClick={() => router.push("/")} className="btn">
-              ← Back to Home
-            </button>
-
-            <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="btn btn-primary"
-            >
-              Sign Out
-            </button>
-          </div>
+          <SignOutButton />
         </div>
 
         <div className="footer">

@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignIn() {
-  const [providers, setProviders] = useState<any>(null);
+  const [providers, setProviders] = useState<Record<
+    string,
+    { id: string; name: string }
+  > | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -38,7 +41,7 @@ export default function SignIn() {
 
           <div className="space-y-4">
             {providers &&
-              Object.values(providers).map((provider: any) => (
+              Object.values(providers).map((provider) => (
                 <button
                   key={provider.name}
                   onClick={() => handleSignIn(provider.id)}
