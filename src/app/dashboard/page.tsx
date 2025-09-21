@@ -9,14 +9,17 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return; // Still loading
-    if (!session) router.push("/auth/signin"); // Not authenticated
+    if (status === "loading") return;
+    if (!session) router.push("/auth/signin");
   }, [session, status, router]);
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading...</div>
+      <div className="page-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }
@@ -26,19 +29,43 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Protected Page</h1>
-          <p className="mt-4 text-gray-600">Welcome, {session.user?.name}!</p>
-          <div className="mt-8">
+    <div className="page-container">
+      <div className="content-wrapper dashboard-container">
+        <div className="card">
+          <div className="logo">N</div>
+          <h1 className="title">Dashboard</h1>
+          <p className="description">Protected page for authenticated users</p>
+
+          <div className="user-info">
+            <div className="user-info-label">User</div>
+            <div className="user-info-value">
+              {session.user?.name || session.user?.email}
+            </div>
+          </div>
+
+          {session.user?.email && (
+            <div className="user-info">
+              <div className="user-info-label">Email</div>
+              <div className="user-info-value">{session.user.email}</div>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <button onClick={() => router.push("/")} className="btn">
+              ← Back to Home
+            </button>
+
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="btn btn-primary"
             >
               Sign Out
             </button>
           </div>
+        </div>
+
+        <div className="footer">
+          <p className="footer-text">Dashboard • Next.js OAuth Demo</p>
         </div>
       </div>
     </div>
