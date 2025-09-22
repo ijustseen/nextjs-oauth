@@ -1,6 +1,7 @@
-import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import type { NextAuthOptions } from "next-auth";
+// Note: next-auth v4 doesn't export NextAuthOptions type in some setups; keep object un-annotated
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,7 +16,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account }) {
-      if (account) {
+      if (account?.access_token) {
         token.accessToken = account.access_token;
       }
       return token;
